@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Venture IT – Invoice System</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="responsive.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     DASHBOARD VIEW
+════════════════════════════════════════ -->
+<div id="view-dashboard" class="view active">
+
+  <!-- Topbar -->
+  <header class="dash-topbar">
+    <div class="dash-brand">
+      <div class="dash-brand-dot"></div>
+      <span class="dash-brand-name">Venture IT</span>
+    </div>
+    <div class="dash-topbar-right">
+      <span class="dash-date" id="dash-date"></span>
+    </div>
+  </header>
+
+  <!-- Hero strip -->
+  <div class="dash-hero">
+    <div class="dash-hero-inner">
+      <p class="dash-hero-label">BILLING SYSTEM</p>
+      <h1 class="dash-hero-title">Invoice<br/>Generator</h1>
+      <p class="dash-hero-sub">Create, preview and deliver professional invoices instantly.</p>
+    </div>
+    <div class="dash-hero-accent"></div>
+  </div>
+
+  <!-- Stats row -->
+  <div class="dash-stats">
+    <div class="stat-card">
+      <span class="stat-num" id="stat-total">0</span>
+      <span class="stat-label">Invoices Created</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num" id="stat-session">0</span>
+      <span class="stat-label">This Session</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num" id="stat-billed">৳0</span>
+      <span class="stat-label">Total Billed</span>
+    </div>
+  </div>
+
+  <!-- Recent invoices -->
+  <div class="dash-section">
+    <div class="dash-section-head">
+      <span class="dash-section-title">Recent Invoices</span>
+    </div>
+    <div id="invoice-list" class="invoice-list">
+      <div class="empty-state">
+        <div class="empty-icon">📄</div>
+        <p>No invoices yet.<br/>Tap the button below to create your first one.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAB -->
+  <button class="fab" id="btn-open-form" onclick="openInvoiceForm()">
+    <span class="fab-icon">+</span>
+    <span class="fab-label">Create Invoice</span>
+  </button>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     INVOICE FORM VIEW
+════════════════════════════════════════ -->
+<div id="view-form" class="view">
+
+  <header class="form-topbar">
+    <button class="back-btn" onclick="goToDashboard()">
+      <span>←</span> Dashboard
+    </button>
+    <span class="form-topbar-title">New Invoice</span>
+    <button class="preview-btn-top" onclick="previewInvoice()">Preview</button>
+  </header>
+
+  <div class="form-body">
+
+    <!-- Invoice Meta -->
+    <div class="form-card">
+      <h2 class="form-card-title">Invoice Details</h2>
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Invoice No.</label>
+          <input type="text" id="inv-number" placeholder="VIT-2025-001" />
+        </div>
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="inv-date" />
+        </div>
+      </div>
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Due Date (optional)</label>
+          <input type="date" id="inv-due" />
+        </div>
+        <div class="form-group">
+          <label>Currency</label>
+          <select id="inv-currency">
+            <option value="৳">BDT (৳)</option>
+            <option value="$">USD ($)</option>
+            <option value="€">EUR (€)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Client Info -->
+    <div class="form-card">
+      <h2 class="form-card-title">Client Information</h2>
+      <div class="form-group">
+        <label>Client Name *</label>
+        <input type="text" id="client-name" placeholder="Full name" />
+      </div>
+      <div class="form-group">
+        <label>Company Name</label>
+        <input type="text" id="client-company" placeholder="Optional" />
+      </div>
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="client-email" placeholder="client@email.com" />
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="tel" id="client-phone" placeholder="+880..." />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Address</label>
+        <textarea id="client-address" rows="2" placeholder="Street, City, Country"></textarea>
+      </div>
+    </div>
+
+    <!-- Items Table -->
+    <div class="form-card">
+      <div class="form-card-head">
+        <h2 class="form-card-title">Services / Items</h2>
+        <button class="add-item-btn" onclick="addItemRow()">+ Add Row</button>
+      </div>
+
+      <div class="items-table-wrap">
+        <table class="items-table" id="items-table">
+          <thead>
+            <tr>
+              <th class="col-desc">Description</th>
+              <th class="col-qty">Qty</th>
+              <th class="col-price">Unit Price</th>
+              <th class="col-total">Total</th>
+              <th class="col-del"></th>
+            </tr>
+          </thead>
+          <tbody id="items-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Financial Summary -->
+    <div class="form-card">
+      <h2 class="form-card-title">Financial Summary</h2>
+      <div class="fin-row">
+        <span class="fin-label">Subtotal</span>
+        <span class="fin-value mono" id="fin-subtotal">৳0.00</span>
+      </div>
+      <div class="fin-row fin-received">
+        <span class="fin-label">Received Amount</span>
+        <input type="number" id="fin-received" class="fin-input mono" placeholder="0.00" min="0" oninput="recalculate()" />
+      </div>
+      <div class="fin-divider"></div>
+      <div class="fin-row fin-due">
+        <span class="fin-label">Due Amount</span>
+        <span class="fin-value mono" id="fin-due">৳0.00</span>
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="form-card">
+      <h2 class="form-card-title">Notes (optional)</h2>
+      <textarea id="inv-notes" rows="3" placeholder="Payment terms, thank you message, bank details..."></textarea>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="form-actions">
+      <button class="action-btn primary" onclick="previewInvoice()">
+        <span>👁</span> Preview Invoice
+      </button>
+      <button class="action-btn secondary" onclick="downloadPDF()">
+        <span>⬇</span> Download PDF
+      </button>
+      <button class="action-btn outline" onclick="printInvoice()">
+        <span>🖨</span> Print
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     INVOICE PREVIEW MODAL
+════════════════════════════════════════ -->
+<div id="modal-preview" class="modal-overlay" onclick="closePreview(event)">
+  <div class="modal-box">
+    <div class="modal-actions">
+      <button class="modal-action-btn" onclick="downloadPDF()">⬇ Download PDF</button>
+      <button class="modal-action-btn" onclick="printInvoice()">🖨 Print</button>
+      <button class="modal-close" onclick="closePreviewDirect()">✕</button>
+    </div>
+
+    <!-- THE PRINTABLE / PDF INVOICE -->
+    <div id="invoice-preview" class="invoice-a4">
+
+      <!-- Invoice Header -->
+      <div class="inv-header">
+        <div class="inv-company-info">
+          <div class="inv-company-name">Venture IT</div>
+          <div class="inv-company-details">
+            <p><strong>Email:</strong> info@ventureit.tech</p>
+            <p><strong>Web:</strong> www.ventureit.tech</p>
+            <p><strong>Contact:</strong> +8801892996862</p>
+            <p><strong>Office:</strong> Porabari, Sirajganj</p>
+            <p><strong>Meeting Location:</strong> F Block, Banasree, Dhaka</p>
+          </div>
+        </div>
+        <div class="inv-logo-wrap">
+          <img src="VIT.png" alt="Venture IT Logo" class="inv-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" />
+          <div class="inv-logo-fallback" style="display:none;">
+            <span>VIT</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Invoice Title Band -->
+      <div class="inv-title-band">
+        <span class="inv-title-text">INVOICE</span>
+        <div class="inv-meta-right">
+          <div class="inv-meta-row"><span>Invoice No.</span><strong id="prev-number">—</strong></div>
+          <div class="inv-meta-row"><span>Date</span><strong id="prev-date">—</strong></div>
+          <div class="inv-meta-row"><span>Due Date</span><strong id="prev-duedate">—</strong></div>
+        </div>
+      </div>
+
+      <!-- Bill To -->
+      <div class="inv-bill-section">
+        <div class="inv-bill-to">
+          <div class="inv-bill-label">BILL TO</div>
+          <div class="inv-bill-name" id="prev-client-name">—</div>
+          <div class="inv-bill-detail" id="prev-client-company"></div>
+          <div class="inv-bill-detail" id="prev-client-email"></div>
+          <div class="inv-bill-detail" id="prev-client-phone"></div>
+          <div class="inv-bill-detail" id="prev-client-address"></div>
+        </div>
+      </div>
+
+      <!-- Items Table -->
+      <table class="inv-items-table">
+        <thead>
+          <tr>
+            <th class="th-desc">Description</th>
+            <th class="th-qty">Qty</th>
+            <th class="th-price">Unit Price</th>
+            <th class="th-total">Total</th>
+          </tr>
+        </thead>
+        <tbody id="prev-items-tbody"></tbody>
+      </table>
+
+      <!-- Financial Summary -->
+      <div class="inv-summary">
+        <div class="inv-summary-inner">
+          <div class="inv-sum-row">
+            <span>Subtotal</span>
+            <span id="prev-subtotal">৳0.00</span>
+          </div>
+          <div class="inv-sum-row">
+            <span>Received Amount</span>
+            <span id="prev-received">৳0.00</span>
+          </div>
+          <div class="inv-sum-divider"></div>
+          <div class="inv-sum-row inv-sum-due">
+            <span>Due Amount</span>
+            <span id="prev-due">৳0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="inv-notes-section" id="inv-notes-section" style="display:none;">
+        <div class="inv-notes-label">Notes</div>
+        <div class="inv-notes-text" id="prev-notes"></div>
+      </div>
+
+      <!-- Footer -->
+      <div class="inv-footer">
+        <div class="inv-footer-left">
+          <p class="inv-footer-thanks">Thank you for choosing Venture IT.</p>
+          <p class="inv-footer-website">www.ventureit.tech</p>
+        </div>
+        <div class="inv-footer-right">
+          <div class="inv-sig-block">
+            <img src="sign.png" alt="Signature" class="inv-sig-img" onerror="this.style.display='none'" />
+            <div class="inv-sig-line"></div>
+            <div class="inv-sig-label">Authorised by</div>
+          </div>
+          <img src="trademark.png" alt="Payment Received" class="inv-stamp" onerror="this.style.display='none'" />
+        </div>
+      </div>
+
+    </div><!-- /invoice-a4 -->
+  </div><!-- /modal-box -->
+</div><!-- /modal-overlay -->
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
