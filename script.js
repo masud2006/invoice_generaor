@@ -295,67 +295,109 @@ async function downloadPDF() {
   const data = collectData();
   renderPreview(data);
 
-  const modal = document.getElementById('modal-preview');
-  modal.classList.add('open');
+  // Show loading feedback — works whether called from modal or form buttons
+  const btns = document.querySelectorAll('.modal-action-btn, .action-btn.secondary');
+  const origLabels = [];
+  btns.forEach((b, i) => { origLabels[i] = b.textContent; b.textContent = '⏳ Generating…'; b.disabled = true; });
 
+  // A4 pixel width at 96 dpi — the single source of truth for capture width
+  const A4_PX = 794;
+
+  // ------------------------------------------------------------------
+  // Build an off-screen wrapper that is ALWAYS A4_PX wide, completely
+  // outside the viewport so mobile layout never clips or re-flows it.
+  // ------------------------------------------------------------------
+  const wrapper = document.createElement('div');
+  Object.assign(wrapper.style, {
+    position:   'fixed',
+    top:        '0',
+    left:       '-9999px',       // off-screen, not off-DOM
+    width:      A4_PX + 'px',
+    minWidth:   A4_PX + 'px',
+    maxWidth:   A4_PX + 'px',
+    background: '#ffffff',
+    zIndex:     '-1',
+    overflow:   'visible',
+    fontFamily: "'Inter', sans-serif"
+  });
+
+  // Clone the fully-rendered invoice node into the wrapper
   const invoiceEl = document.getElementById('invoice-preview');
+  const clone = invoiceEl.cloneNode(true);
+  Object.assign(clone.style, {
+    width:    A4_PX + 'px',
+    minWidth: A4_PX + 'px',
+    maxWidth: A4_PX + 'px',
+    transform: 'none',
+    margin:    '0',
+    padding:   '0',
+    boxShadow: 'none',
+    borderRadius: '0'
+  });
 
-  // Show loading state
-  const btn = document.querySelector('.modal-action-btn');
-  const originalText = btn ? btn.textContent : '';
-  if (btn) btn.textContent = '⏳ Generating…';
+  wrapper.appendChild(clone);
+  document.body.appendChild(wrapper);
 
   try {
-    await new Promise(r => setTimeout(r, 200)); // let DOM settle
+    // Let the browser fully lay out the cloned node at A4 width
+    await new Promise(r => setTimeout(r, 250));
 
-    const canvas = await html2canvas(invoiceEl, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
+    const canvas = await html2canvas(clone, {
+      scale:           2,           // 2× → ~192 dpi, crisp on all screens
+      useCORS:         true,
+      allowTaint:      true,
       backgroundColor: '#ffffff',
-      logging: false,
-      imageTimeout: 5000
+      logging:         false,
+      imageTimeout:    8000,
+      width:           A4_PX,
+      windowWidth:     A4_PX,       // critical: tells h2c the "viewport" is A4
+      scrollX:         0,
+      scrollY:         0
     });
-
-    const imgData = canvas.toDataURL('image/jpeg', 0.95);
 
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({
       orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4',
-      compress: true
+      unit:        'mm',
+      format:      'a4',
+      compress:    true
     });
 
-    const pageW = pdf.internal.pageSize.getWidth();
-    const pageH = pdf.internal.pageSize.getHeight();
+    const pageW  = pdf.internal.pageSize.getWidth();   // 210 mm
+    const pageH  = pdf.internal.pageSize.getHeight();  // 297 mm
 
     const canvasW = canvas.width;
     const canvasH = canvas.height;
-    const ratio   = canvasH / canvasW;
-    const imgH    = pageW * ratio;
 
-    if (imgH <= pageH) {
-      pdf.addImage(imgData, 'JPEG', 0, 0, pageW, imgH);
+    // mm per canvas-pixel
+    const mmPerPx = pageW / canvasW;
+    const totalMM = canvasH * mmPerPx;
+
+    if (totalMM <= pageH) {
+      // Fits on a single page
+      pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, pageW, totalMM);
     } else {
-      // Multi-page
-      let yOffset = 0;
-      let remaining = canvasH;
-      const pagePixelH = Math.floor(canvasW * (pageH / pageW));
+      // Split into multiple A4 pages cleanly
+      const pagePixelH = Math.round(pageH / mmPerPx); // canvas px that fit one page
+      let yPx = 0;
 
-      while (remaining > 0) {
-        const sliceH = Math.min(pagePixelH, remaining);
+      while (yPx < canvasH) {
+        const sliceH = Math.min(pagePixelH, canvasH - yPx);
+
         const pageCanvas = document.createElement('canvas');
         pageCanvas.width  = canvasW;
         pageCanvas.height = sliceH;
-        const ctx = pageCanvas.getContext('2d');
-        ctx.drawImage(canvas, 0, yOffset, canvasW, sliceH, 0, 0, canvasW, sliceH);
-        const sliceData = pageCanvas.toDataURL('image/jpeg', 0.95);
-        const sliceImgH = (sliceH / canvasW) * pageW;
-        if (yOffset > 0) pdf.addPage();
-        pdf.addImage(sliceData, 'JPEG', 0, 0, pageW, sliceImgH);
-        yOffset   += sliceH;
-        remaining -= sliceH;
+        pageCanvas.getContext('2d').drawImage(
+          canvas,
+          0, yPx, canvasW, sliceH,
+          0, 0,   canvasW, sliceH
+        );
+
+        const sliceMM = sliceH * mmPerPx;
+        if (yPx > 0) pdf.addPage();
+        pdf.addImage(pageCanvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, pageW, sliceMM);
+
+        yPx += sliceH;
       }
     }
 
@@ -372,9 +414,10 @@ async function downloadPDF() {
     console.error('PDF generation error:', err);
     alert('PDF generation failed. Try the Print option instead.');
   } finally {
-    if (btn) btn.textContent = originalText;
-    modal.classList.remove('open');
-    document.body.style.overflow = '';
+    // Remove the off-screen clone
+    if (wrapper && wrapper.parentNode) wrapper.parentNode.removeChild(wrapper);
+    // Restore all button labels
+    btns.forEach((b, i) => { b.textContent = origLabels[i]; b.disabled = false; });
   }
 }
 
