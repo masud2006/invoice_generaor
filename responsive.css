@@ -1,188 +1,552 @@
 /* ═══════════════════════════════════════════
-   VENTURE IT – INVOICE SYSTEM
-   responsive.css – Mobile-first Breakpoints
-   Base: mobile (320px+)
-   sm:  480px+
-   md:  640px+
-   lg:  768px+
-   xl:  1024px+
+   UNIVERSAL INVOICE GENERATOR – responsive.css
+   Mobile-first Breakpoints
 ═══════════════════════════════════════════ */
 
 /* ── Base Mobile (default, 320px+) ── */
 
-/* Dashboard Hero: tighter on very small screens */
-.dash-hero { padding: 28px 16px 24px; }
-.dash-hero-title { font-size: 2.2rem; }
-
-/* Stats: compact on small screens */
-.stat-num { font-size: 1.2rem; }
-.stat-label { font-size: 0.6rem; }
-.stat-card { padding: 16px 8px; }
-
-/* Form cards: reduce padding on small screens */
-.form-card { padding: 16px; }
-.form-body { padding: 12px; gap: 12px; }
-
-/* Row-2 collapses to single column on tiny screens */
-@media (max-width: 359px) {
-  .form-row-2 { grid-template-columns: 1fr; }
-  .dash-hero-title { font-size: 1.9rem; }
-  .fab { padding: 12px 16px; font-size: 0.85rem; }
+.dash-hero {
+    padding: 28px 16px 24px;
+}
+.dash-hero-title {
+    font-size: 2.2rem;
+}
+.stat-num {
+    font-size: 1.2rem;
+}
+.stat-label {
+    font-size: 0.6rem;
+}
+.stat-card {
+    padding: 16px 8px;
+}
+.form-card {
+    padding: 16px;
+}
+.form-body {
+    padding: 12px;
+    gap: 12px;
+}
+.step-nav {
+    flex-wrap: wrap;
+}
+.step-btn {
+    font-size: 0.85rem;
+    padding: 12px 16px;
+}
+.step-btn.prev {
+    flex: 1;
+}
+.step-btn.next {
+    flex: 2;
+}
+.step-btn.primary.generate-btn {
+    flex: 1 1 100%;
+}
+.step-indicators {
+    gap: 4px;
+}
+.step-dot {
+    width: 8px;
+    height: 8px;
+}
+.step-label {
+    font-size: 0.65rem;
+    min-width: 44px;
+}
+.inv-header {
+    padding: 24px 20px 18px;
+    flex-wrap: wrap;
+}
+.inv-company-name {
+    font-size: 1.3rem;
+}
+.inv-company-details p {
+    font-size: 0.7rem;
+}
+.inv-logo-wrap {
+    margin-left: 0;
+    margin-top: 8px;
+}
+.inv-logo {
+    max-width: 80px;
+    max-height: 60px;
+}
+.inv-logo-fallback {
+    width: 60px;
+    height: 60px;
+    font-size: 1rem;
+}
+.inv-title-band {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 20px;
+    gap: 8px;
+}
+.inv-title-text {
+    font-size: 1.2rem;
+    text-align: center;
+}
+.inv-meta-right {
+    align-items: flex-start;
+}
+.inv-meta-row {
+    font-size: 0.7rem;
+    gap: 8px;
+}
+.inv-meta-row span {
+    min-width: 56px;
+}
+.inv-bill-section {
+    padding: 16px 20px;
+}
+.inv-bill-name {
+    font-size: 0.95rem;
+}
+.inv-bill-detail {
+    font-size: 0.75rem;
+}
+.inv-items-table thead th,
+.inv-items-table tbody td {
+    padding: 8px 12px;
+    font-size: 0.78rem;
+}
+.inv-items-table tbody td {
+    padding: 6px 8px;
+}
+.inv-summary {
+    padding: 16px 20px;
+    justify-content: flex-start;
+}
+.inv-summary-inner {
+    width: 100%;
+}
+.inv-sum-row {
+    font-size: 0.82rem;
+}
+.inv-sum-due span:last-child {
+    font-size: 1rem;
+}
+.inv-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 20px 24px;
+}
+.inv-footer-right {
+    align-self: flex-end;
+    gap: 16px;
+}
+.inv-sig-img {
+    max-width: 80px;
+    max-height: 40px;
+}
+.inv-sig-line {
+    width: 80px;
+}
+.inv-notes-section {
+    padding: 12px 20px;
+}
+.inv-notes-text {
+    font-size: 0.78rem;
+}
+.inv-list-card {
+    padding: 12px 14px;
+}
+.inv-list-client {
+    font-size: 0.8rem;
+}
+.inv-list-amount {
+    font-size: 0.8rem;
+}
+.inv-list-btn {
+    font-size: 0.65rem;
+    padding: 4px 6px;
+}
+.fab {
+    padding: 12px 18px;
+    font-size: 0.85rem;
+    bottom: 16px;
+    right: 16px;
+}
+.fab-icon {
+    font-size: 1.1rem;
+}
+.fab-label {
+    display: none;
+}
+.modal-overlay {
+    padding: 12px 6px;
+}
+.modal-action-btn {
+    font-size: 0.75rem;
+    padding: 7px 12px;
+}
+.modal-close {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
 }
 
 /* ── Small (480px+) ── */
 @media (min-width: 480px) {
-  .dash-topbar { padding: 16px 24px; }
-  .dash-hero { padding: 40px 24px 32px; }
-  .dash-hero-title { font-size: 2.6rem; }
-  .dash-section { padding: 24px 24px 100px; }
-  .dash-stats .stat-num { font-size: 1.4rem; }
-  .form-body { padding: 14px; }
-  .form-card { padding: 20px; }
-  .form-actions { flex-direction: row; flex-wrap: wrap; }
-  .action-btn { flex: 1; min-width: 140px; padding: 13px 10px; }
+    .dash-topbar {
+        padding: 16px 24px;
+    }
+    .dash-hero {
+        padding: 40px 24px 32px;
+    }
+    .dash-hero-title {
+        font-size: 2.6rem;
+    }
+    .dash-section {
+        padding: 24px 24px 100px;
+    }
+    .stat-num {
+        font-size: 1.4rem;
+    }
+    .form-body {
+        padding: 14px;
+    }
+    .form-card {
+        padding: 20px;
+    }
+    .step-btn {
+        font-size: 0.9rem;
+    }
+    .fab-label {
+        display: inline;
+    }
 }
 
 /* ── Medium (640px+) ── */
 @media (min-width: 640px) {
-  /* Dashboard */
-  .dash-topbar { padding: 16px 32px; }
-  .dash-hero { padding: 48px 32px 36px; }
-  .dash-hero-title { font-size: 3rem; }
-  .dash-hero-sub { max-width: 340px; }
-  .dash-section { padding: 28px 32px 100px; }
-
-  /* Stats */
-  .stat-card { padding: 22px 16px; }
-  .stat-num { font-size: 1.6rem; }
-  .stat-label { font-size: 0.68rem; }
-
-  /* Form */
-  .form-body { padding: 20px; gap: 16px; }
-  .form-card { padding: 24px; }
-  .form-topbar { padding: 14px 24px; }
-  .form-topbar-title { font-size: 1rem; }
-  .back-btn { font-size: 0.9rem; }
-
-  /* Invoice Preview Table: reduce padding */
-  .inv-items-table thead th,
-  .inv-items-table tbody td { padding: 12px 28px; }
-  .inv-header { padding: 32px 32px 24px; }
-  .inv-bill-section { padding: 20px 32px; }
-  .inv-summary { padding: 20px 32px; }
-  .inv-footer { padding: 24px 32px 28px; }
-  .inv-title-band { padding: 14px 32px; }
-  .inv-notes-section { padding: 14px 32px; }
-
-  /* Modal */
-  .modal-overlay { padding: 24px 16px; }
-
-  /* FAB */
-  .fab { bottom: 28px; right: 28px; }
-
-  /* Form Actions */
-  .form-actions { flex-direction: row; }
-  .action-btn { flex: 1; }
+    .dash-topbar {
+        padding: 16px 32px;
+    }
+    .dash-hero {
+        padding: 48px 32px 36px;
+    }
+    .dash-hero-title {
+        font-size: 3rem;
+    }
+    .dash-hero-sub {
+        max-width: 340px;
+    }
+    .dash-section {
+        padding: 28px 32px 100px;
+    }
+    .stat-card {
+        padding: 22px 16px;
+    }
+    .stat-num {
+        font-size: 1.6rem;
+    }
+    .stat-label {
+        font-size: 0.68rem;
+    }
+    .form-body {
+        padding: 20px;
+        gap: 16px;
+    }
+    .form-card {
+        padding: 24px;
+    }
+    .form-topbar {
+        padding: 14px 24px;
+    }
+    .step-indicators {
+        gap: 8px;
+    }
+    .step-dot {
+        width: 10px;
+        height: 10px;
+    }
+    .step-label {
+        font-size: 0.7rem;
+        min-width: 56px;
+    }
+    .step-btn {
+        padding: 14px 20px;
+    }
+    .step-btn.prev {
+        flex: 0.5;
+    }
+    .step-btn.primary.generate-btn {
+        flex: 2;
+    }
+    .inv-header {
+        padding: 32px 32px 24px;
+        flex-wrap: nowrap;
+    }
+    .inv-company-name {
+        font-size: 1.5rem;
+    }
+    .inv-logo {
+        max-width: 100px;
+        max-height: 70px;
+    }
+    .inv-title-band {
+        flex-direction: row;
+        padding: 14px 32px;
+    }
+    .inv-title-text {
+        text-align: left;
+    }
+    .inv-bill-section {
+        padding: 20px 32px;
+    }
+    .inv-items-table thead th,
+    .inv-items-table tbody td {
+        padding: 12px 24px;
+    }
+    .inv-summary {
+        padding: 20px 32px;
+        justify-content: flex-end;
+    }
+    .inv-summary-inner {
+        width: 280px;
+    }
+    .inv-footer {
+        flex-direction: row;
+        padding: 24px 32px 28px;
+    }
+    .inv-footer-right {
+        align-self: flex-end;
+    }
+    .inv-notes-section {
+        padding: 14px 32px;
+    }
+    .modal-overlay {
+        padding: 24px 16px;
+    }
+    .modal-actions {
+        gap: 12px;
+    }
+    .fab {
+        bottom: 28px;
+        right: 28px;
+        padding: 14px 22px;
+        font-size: 0.9rem;
+    }
+    .fab-label {
+        display: inline;
+    }
 }
 
 /* ── Large (768px+) ── */
 @media (min-width: 768px) {
-  .dash-topbar { padding: 16px 40px; }
-  .dash-hero { padding: 56px 40px 44px; }
-  .dash-hero-title { font-size: 3.4rem; }
-  .dash-section { padding: 32px 40px 100px; }
-
-  /* Form: two-column layout for some areas */
-  .form-body { padding: 24px; max-width: 720px; margin: 0 auto; }
-
-  /* Invoice */
-  .inv-items-table thead th,
-  .inv-items-table tbody td { padding: 13px 40px; }
-  .inv-header { padding: 36px 40px 28px; }
-  .inv-bill-section { padding: 24px 40px; }
-  .inv-summary { padding: 24px 40px; }
-  .inv-footer { padding: 28px 40px 32px; }
-  .inv-title-band { padding: 14px 40px; }
-  .inv-notes-section { padding: 16px 40px; }
-
-  /* List card enhancements */
-  .inv-list-card { padding: 16px 20px; }
-  .inv-list-client { font-size: 0.95rem; }
-  .inv-list-amount { font-size: 0.95rem; }
-
-  /* Modal */
-  .modal-overlay { padding: 32px 24px; }
-  .modal-box { max-width: 860px; }
+    .dash-topbar {
+        padding: 16px 40px;
+    }
+    .dash-hero {
+        padding: 56px 40px 44px;
+    }
+    .dash-hero-title {
+        font-size: 3.4rem;
+    }
+    .dash-section {
+        padding: 32px 40px 100px;
+    }
+    .form-body {
+        padding: 24px;
+        max-width: 720px;
+        margin: 0 auto;
+    }
+    .inv-header {
+        padding: 36px 40px 28px;
+    }
+    .inv-company-name {
+        font-size: 1.6rem;
+    }
+    .inv-logo {
+        max-width: 120px;
+        max-height: 80px;
+    }
+    .inv-title-band {
+        padding: 14px 40px;
+    }
+    .inv-bill-section {
+        padding: 24px 40px;
+    }
+    .inv-items-table thead th,
+    .inv-items-table tbody td {
+        padding: 13px 40px;
+    }
+    .inv-summary {
+        padding: 24px 40px;
+    }
+    .inv-footer {
+        padding: 28px 40px 32px;
+    }
+    .inv-notes-section {
+        padding: 16px 40px;
+    }
+    .inv-list-card {
+        padding: 16px 20px;
+    }
+    .inv-list-client {
+        font-size: 0.95rem;
+    }
+    .inv-list-amount {
+        font-size: 0.95rem;
+    }
+    .modal-overlay {
+        padding: 32px 24px;
+    }
+    .modal-box {
+        max-width: 860px;
+    }
 }
 
 /* ── XL (1024px+) ── */
 @media (min-width: 1024px) {
-  .dash-topbar { padding: 18px 60px; }
-  .dash-hero { padding: 64px 60px 52px; }
-  .dash-hero-title { font-size: 3.8rem; }
-  .dash-section { padding: 36px 60px 100px; }
-
-  /* Stats wider */
-  .stat-card { padding: 26px 20px; }
-  .stat-num { font-size: 1.8rem; }
-  .stat-label { font-size: 0.72rem; }
-
-  /* Constrain form */
-  .form-body { max-width: 780px; padding: 28px; }
-
-  /* Invoice */
-  .invoice-a4 { min-height: 1122px; } /* A4 at 96dpi */
-
-  /* Wider layout for list cards */
-  .invoice-list { max-width: 760px; margin: 0 auto; }
+    .dash-topbar {
+        padding: 18px 60px;
+    }
+    .dash-hero {
+        padding: 64px 60px 52px;
+    }
+    .dash-hero-title {
+        font-size: 3.8rem;
+    }
+    .dash-section {
+        padding: 36px 60px 100px;
+    }
+    .stat-card {
+        padding: 26px 20px;
+    }
+    .stat-num {
+        font-size: 1.8rem;
+    }
+    .stat-label {
+        font-size: 0.72rem;
+    }
+    .form-body {
+        max-width: 780px;
+        padding: 28px;
+    }
+    .invoice-a4 {
+        min-height: 1122px;
+    }
+    .invoice-list {
+        max-width: 760px;
+        margin: 0 auto;
+    }
 }
 
 /* ── 2XL (1280px+) ── */
 @media (min-width: 1280px) {
-  .dash-topbar { padding: 18px 80px; }
-  .dash-hero { padding: 72px 80px 56px; }
-  .dash-hero-title { font-size: 4.2rem; }
-  .dash-hero-sub { max-width: 400px; }
-  .dash-section { padding: 40px 80px 100px; }
-  .dash-stats { max-width: 560px; margin: 0 auto; }
+    .dash-topbar {
+        padding: 18px 80px;
+    }
+    .dash-hero {
+        padding: 72px 80px 56px;
+    }
+    .dash-hero-title {
+        font-size: 4.2rem;
+    }
+    .dash-hero-sub {
+        max-width: 400px;
+    }
+    .dash-section {
+        padding: 40px 80px 100px;
+    }
+    .dash-stats {
+        max-width: 560px;
+        margin: 0 auto;
+    }
 }
 
 /* ── Touch / hover adjustments ── */
 @media (hover: none) {
-  /* Remove hover effects that might feel sticky on touch */
-  .fab:hover { transform: none; box-shadow: 0 6px 28px rgba(0,194,168,0.4); }
-  .action-btn.primary:hover { transform: none; }
+    .fab:hover {
+        transform: none;
+        box-shadow: 0 6px 28px rgba(0, 194, 168, 0.4);
+    }
+    .step-btn:hover {
+        transform: none;
+    }
+    .step-btn.next:hover {
+        background: var(--brand-glow);
+        color: var(--brand);
+    }
+    .step-btn.primary.generate-btn:hover {
+        transform: none;
+        box-shadow: 0 4px 18px rgba(0, 194, 168, 0.3);
+    }
 }
 
 /* ── iOS safe area ── */
 @supports (padding: env(safe-area-inset-bottom)) {
-  .fab { bottom: calc(24px + env(safe-area-inset-bottom)); }
-  .form-body { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
+    .fab {
+        bottom: calc(24px + env(safe-area-inset-bottom));
+    }
+    .form-body {
+        padding-bottom: calc(40px + env(safe-area-inset-bottom));
+    }
 }
 
 /* ── High DPI / Retina ── */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .inv-logo { image-rendering: -webkit-optimize-contrast; }
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+    .inv-logo {
+        image-rendering: -webkit-optimize-contrast;
+    }
 }
 
 /* ── Reduced Motion ── */
 @media (prefers-reduced-motion: reduce) {
-  * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
-  @keyframes pulse-dot { from { box-shadow: 0 0 8px var(--brand); } to { box-shadow: 0 0 8px var(--brand); } }
+    * {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+    @keyframes pulse-dot {
+        from {
+            box-shadow: 0 0 8px var(--brand);
+        }
+        to {
+            box-shadow: 0 0 8px var(--brand);
+        }
+    }
+    @keyframes fadeUp {
+        from {
+            opacity: 1;
+            transform: none;
+        }
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
 }
 
-/* ── Print ── */
+/* ── Print (already in main style, but keep for safety) ── */
 @media print {
-  .invoice-a4 {
-    width: 210mm !important;
-    min-height: 297mm !important;
-  }
-  .inv-header { padding: 18mm 16mm 10mm; }
-  .inv-title-band { padding: 6mm 16mm; }
-  .inv-bill-section { padding: 8mm 16mm; }
-  .inv-items-table thead th,
-  .inv-items-table tbody td { padding: 5mm 16mm; }
-  .inv-summary { padding: 6mm 16mm; }
-  .inv-footer { padding: 8mm 16mm 12mm; }
-  .inv-notes-section { padding: 5mm 16mm; }
+    .invoice-a4 {
+        width: 210mm !important;
+        min-height: 297mm !important;
+    }
+    .inv-header {
+        padding: 18mm 16mm 10mm;
+    }
+    .inv-title-band {
+        padding: 6mm 16mm;
+    }
+    .inv-bill-section {
+        padding: 8mm 16mm;
+    }
+    .inv-items-table thead th,
+    .inv-items-table tbody td {
+        padding: 5mm 16mm;
+    }
+    .inv-summary {
+        padding: 6mm 16mm;
+    }
+    .inv-footer {
+        padding: 8mm 16mm 12mm;
+    }
+    .inv-notes-section {
+        padding: 5mm 16mm;
+    }
 }
